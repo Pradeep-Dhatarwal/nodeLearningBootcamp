@@ -1,0 +1,16 @@
+<% include partials/header %>
+<div class="container">
+  <div class="row">
+    <div class="col-6 offset-md-3">
+      <h1 class="display-4 text-center"><%= campground.name%></h1>
+      <div class="img-thumbnail ">
+        <img class="img-fluid" src="<%= campground.image%>" alt="">
+      </div>
+      <P>
+        <%= campground.description%>
+      </P>
+    </div>
+    <a href="/campgrounds/<%= campground._id %>/edit"> Edit Post </a>
+  </div>
+</div>
+<% include partials/footer %>
