@@ -8,7 +8,7 @@ var userSchema = new mongoose.Schema({
 
 var User = mongoose.model("User", userSchema);
 var newuser = new User({
-  email: "iasdasds@speech.com",
+  email: "iasdassssds@speech.com",
   name: "asdasdadasdasd"
 });
 newuser.save(function(err, user) {
