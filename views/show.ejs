@@ -10,7 +10,19 @@
         <%= campground.description%>
       </P>
     </div>
-    <a href="/campgrounds/<%= campground._id %>/edit"> Edit Post </a>
+    
+    <div class="col-6 offset-md-3">
+      <a href="/campgrounds/<%= campground._id %>/edit"> Edit Post </a>
+    </div>
+      
+    <div class="col-6 offset-md-3">
+    <% campground.comments.forEach((comment)=>{ %>
+      <strong>
+        <%= comment.author %>
+      </strong>
+       - <%= comment.text %>
+      <% }) %>  
+    </div>
   </div>
 </div>
 <% include partials/footer %>

@@ -3,12 +3,12 @@
 <div class="container jumbotron jumbotron-fluid">
       <div class="container">
         <h1 class="display-4">Campgrounds Page</h1>
-         <p class="lead">This is a modified jumbotron that occupies the entire horizontal space of its parent.</p>
-         <a href="/campgrounds/new">
-         <button class="btn btn-large btn-info" >
-         Add New Campground
-         </button>
-         </a>
+        <p class="lead">This is a modified jumbotron that occupies the entire horizontal space of its parent.</p>
+        <a href="/campgrounds/new">
+          <button class="btn btn-large btn-info" >
+            Add New Campground
+          </button>
+        </a>
       </div>
     </div>
 <div class="container">
@@ -18,9 +18,9 @@
               <div class="img-thumbnail my-2 text-center">
                 <img class="img-fluid" src="<%= campgrounds.image %>" alt="">
                 <div class="text-center">
-                  <caption  >
+                  <figcaption  >
                     <%= campgrounds.name %>
-                  </caption>
+                  </figcaption>
                     <a href="/campgrounds/<%= campgrounds._id %>" class="btn btn-primary mx-auto">more info</a>
                     <form action="/campgrounds/<%=campgrounds._id%>?_method=DELETE" method="post">
                     <input class="btn btn-large btn-info" type="Submit" value="Delete Campground">

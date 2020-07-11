@@ -1,72 +1,25 @@
-var express = require(`express`),
-  app = express(),
-  bodyParser = require(`body-parser`),
-  methodOverride = require("method-override"),
-  mongoose = require(`mongoose`);
-
+const express       = require(`express`),
+  app               = express(),
+  bodyParser        = require(`body-parser`),
+  methodOverride    = require("method-override"),
+  mongoose          = require(`mongoose`),
+  Campground        = require("./models/campground.js"),
+  seedDb            = require("./seeds.js");
+  
+require(`dotenv`).config();
 app.set(`view engine`, "ejs");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
-
-mongoose.connect(`mongodb://localhost/yelp_Camp`, { useNewUrlParser: true });
-var port = process.env.PORT || 1000;
-var campgroundSchema = new mongoose.Schema({
-  name: String,
-  image: String,
-  description: String
+mongoose.connect( process.env.MONGO_URI , {useNewUrlParser: true , useUnifiedTopology: true },(err)=>{
+  if(!err){
+    console.log("Database connected successfully")
+  } else (
+    console.log(err)
+  )
 });
-
-var Campground = mongoose.model("Campground", campgroundSchema);
-// Campground.create(
-//   {
-//     name: "White Water Creek ",
-//     image: "https://farm7.staticflickr.com/6193/6108828094_efc27cbbed.jpg",
-//     description:
-//       "This is a Creek Full of Gold, Bring Your Digging tools or else Freeze in cold!!!!"
-//   },
-//   function(err, campgrounds) {
-//     if (err) {
-//       console.log(err);
-//     } else {
-//       console.log(campgrounds);
-//     }
-//   }
-// );
-// var campgrounds = [
-//   {
-//     name: "White Water Creek ",
-//     image: "https://farm7.staticflickr.com/6193/6108828094_efc27cbbed.jpg"
-//   },
-//   {
-//     name: "Camp Bestival ",
-//     image: "https://farm2.staticflickr.com/1291/4677961495_2c1ce8c73a.jpg"
-//   },
-//   {
-//     name: "Starry Camp",
-//     image: "https://farm2.staticflickr.com/1363/1342367857_2fd12531e7.jpg"
-//   },
-//   {
-//     name: "Occoneechee State Park ",
-//     image: "https://farm3.staticflickr.com/2924/14465824873_026aa469d7.jpg"
-//   },
-//   {
-//     name: "Scout Camp 2012",
-//     image: "https://farm9.staticflickr.com/8300/7930013108_cd3e432ba5.jpg"
-//   },
-//   {
-//     name: "Wye Valley Camping ",
-//     image: "https://farm8.staticflickr.com/7268/7121859753_e7f787dc42.jpg"
-//   },
-//   {
-//     name: "cougar photobomb",
-//     image: "https://farm8.staticflickr.com/7145/6566058859_66be51c243.jpg"
-//   },
-//   {
-//     name: "Morning TEMPhas broken",
-//     image: "https://farm7.staticflickr.com/6103/6333668591_90e7c2bc72.jpg"
-//   }
-// ];
+var port = process.env.PORT || 1000;
+seedDb();
 
 // Root Route
 app.get(`/`, function(req, res) {
@@ -89,25 +42,24 @@ app.get(`/campgrounds/new`, function(req, res) {
 });
 // Create Route
 app.post(`/campgrounds`, function (req, res) {
-    if (req.body.campground == null) {
-        Campground.create(req.body.campground, function (err, campgrounds) {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log("Data added Succesfully");
-                console.log(campgrounds);
-                res.redirect(`/campgrounds`);
-            }
-        });
-    } else {
+      if(req.body.campground.image ==""|| req.body.campground.name =="" || req.body.campground.description ==""){
         res.render("new");
+      } else {
+      Campground.create(req.body.campground, function (err, campgrounds) {
+        if (err) {
+            res.send(alert(err));
+        } else {
+            console.log("Data added Successfully");
+            console.log(campgrounds);
+            res.redirect(`/campgrounds`);
+        }
+    });
     }
-  
 });
 
 //Show Route
 app.get("/campgrounds/:id", function(req, res) {
-  Campground.findById({ _id: req.params.id }, function(err, CampgroundDetails) {
+  Campground.findById(req.params.id).populate("comments").exec((err, CampgroundDetails) => {
     if (err) {
       console.log(err);
     } else {
@@ -115,7 +67,8 @@ app.get("/campgrounds/:id", function(req, res) {
     }
   });
 });
-// EDit Route
+
+// Edit Route
 app.get("/campgrounds/:id/edit", function(req, res) {
   Campground.findById({ _id: req.params.id }, function(
     err,
@@ -128,7 +81,10 @@ app.get("/campgrounds/:id/edit", function(req, res) {
     }
   });
 });
-//put route
+//*=================================//
+//*          update route           //
+//*=================================//
+
 app.put("/campgrounds/:id", function(req, res) {
   Campground.findOneAndUpdate(
     { _id: req.params.id },
@@ -152,7 +108,24 @@ app.delete("/campgrounds/:id", function(req, res) {
     }
   });
 });
-//listen for client
+
+//*=================================//
+//*         Comment Routes          //
+//*=================================//
+
+
+
+
+
+
+
+
+
+//*=================================//
+//*       listen for client         //
+//*=================================//
+
+//
 app.listen(port, function() {
   console.log("server started on port " + port);
 });
