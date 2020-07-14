@@ -1,3 +1,10 @@
+
+// *=================================//
+// *           Packages              //
+
+const campground = require("./models/campground.js");
+
+// *=================================//
 const express       = require(`express`),
   app               = express(),
   bodyParser        = require(`body-parser`),
@@ -6,11 +13,20 @@ const express       = require(`express`),
   Campground        = require("./models/campground.js"),
   seedDb            = require("./seeds.js");
   
+
+//*=================================//
+//*           Middleware            //
+//*=================================//
 require(`dotenv`).config();
 app.set(`view engine`, "ejs");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
+
+
+//*=================================//
+//*           Database              //
+//*=================================//
 mongoose.connect( process.env.MONGO_URI , {useNewUrlParser: true , useUnifiedTopology: true },(err)=>{
   if(!err){
     console.log("Database connected successfully")
@@ -18,32 +34,49 @@ mongoose.connect( process.env.MONGO_URI , {useNewUrlParser: true , useUnifiedTop
     console.log(err)
   )
 });
-var port = process.env.PORT || 1000;
+
+
+
+
 seedDb();
 
-// Root Route
+
+//*=================================//
+//*           Root route            //
+//*=================================//
 app.get(`/`, function(req, res) {
   res.render(`landing`);
 });
-// Index Route
+
+
+//*=================================//
+//*          Index route            //
+//*=================================//
 app.get("/campgrounds", function(req, res) {
   Campground.find({}, function(err, campgrounds) {
     if (err) {
       console.log(err);
     } else {
-      res.render("index", { campground: campgrounds });
+      res.render("campgrounds/index", { campground: campgrounds });
     }
   });
 });
 
-//New Route
+
+//*=================================//
+//*            New route            //
+//*=================================//
 app.get(`/campgrounds/new`, function(req, res) {
-  res.render("new");
+  res.render("campgrounds/new");
 });
-// Create Route
+
+
+//*=================================//
+//*            Create route         //
+//*=================================//
 app.post(`/campgrounds`, function (req, res) {
       if(req.body.campground.image ==""|| req.body.campground.name =="" || req.body.campground.description ==""){
-        res.render("new");
+        res.render("campgrounds/new");
       } else {
       Campground.create(req.body.campground, function (err, campgrounds) {
         if (err) {
@@ -57,18 +90,24 @@ app.post(`/campgrounds`, function (req, res) {
     }
 });
 
-//Show Route
+
+//*=================================//
+//*            Show route           //
+//*=================================//
 app.get("/campgrounds/:id", function(req, res) {
   Campground.findById(req.params.id).populate("comments").exec((err, CampgroundDetails) => {
     if (err) {
       console.log(err);
     } else {
-      res.render("show", { campground: CampgroundDetails });
+      res.render("campgrounds/show", { campground: CampgroundDetails });
     }
   });
 });
 
-// Edit Route
+
+//*=================================//
+//*            Edit route           //
+//*=================================//
 app.get("/campgrounds/:id/edit", function(req, res) {
   Campground.findById({ _id: req.params.id }, function(
     err,
@@ -77,14 +116,15 @@ app.get("/campgrounds/:id/edit", function(req, res) {
     if (err) {
       console.log(err);
     } else {
-      res.render("edit", { campground: editCampgroundDetails });
+      res.render("campgrounds/edit", { campground: editCampgroundDetails });
     }
   });
 });
+
+
 //*=================================//
 //*          update route           //
 //*=================================//
-
 app.put("/campgrounds/:id", function(req, res) {
   Campground.findOneAndUpdate(
     { _id: req.params.id },
@@ -99,6 +139,10 @@ app.put("/campgrounds/:id", function(req, res) {
   );
 });
 
+
+//*=================================//
+//*          delete route           //
+//*=================================//
 app.delete("/campgrounds/:id", function(req, res) {
   Campground.findByIdAndDelete({ _id: req.params.id }, function(err) {
     if (err) {
@@ -109,11 +153,46 @@ app.delete("/campgrounds/:id", function(req, res) {
   });
 });
 
+
 //*=================================//
 //*         Comment Routes          //
 //*=================================//
+app.get("/campgrounds/:id/comments/new",(req,res)=>{
+Campground.findById(req.params.id, (err,campground)=>{
+  if (err) {
+    console.log(err)
+  } else {
+    res.render("comments/new", {campground:campground})
+  }
+})
+
+});
 
 
+
+
+app.post("/campgrounds/:id/comments",(req,res)=>{
+  Campground.findById(req.params.id,(err,campground)=>{
+    if(err){
+    console.log(err);
+    res.redirect("/campgrounds/"+req.params.id)
+    }else{
+      console.log(campground)
+      Comment.create(req.body.comment,(err,comment)=>{
+        if(err){
+        console.log(err);
+        }else{
+        console.log(comment)
+        Campground.comment.push(comment);
+        Campground.save();
+        res.redirect("/campgrounds/"+req.params.id)
+        }
+      })
+      
+    }
+  })
+
+});
 
 
 
@@ -124,8 +203,8 @@ app.delete("/campgrounds/:id", function(req, res) {
 //*=================================//
 //*       listen for client         //
 //*=================================//
+var port = process.env.PORT || 1000;
 
-//
 app.listen(port, function() {
   console.log("server started on port " + port);
 });
