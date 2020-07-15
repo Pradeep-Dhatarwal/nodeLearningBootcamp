@@ -74,7 +74,7 @@ var Comment = require("./models/comment.js")
                   if(err){ 
                     console.log(err);
                   } else {
-                    console.log(comment);
+                    console.log("addecd comment");
                     camp.comments.push(comment)  
                     camp.save();
                   } 

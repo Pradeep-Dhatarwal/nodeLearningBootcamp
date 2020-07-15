@@ -10,6 +10,7 @@ const express       = require(`express`),
   bodyParser        = require(`body-parser`),
   methodOverride    = require("method-override"),
   mongoose          = require(`mongoose`),
+  Comment           = require("./models/comment.js")
   Campground        = require("./models/campground.js"),
   seedDb            = require("./seeds.js");
   
@@ -177,21 +178,20 @@ app.post("/campgrounds/:id/comments",(req,res)=>{
     console.log(err);
     res.redirect("/campgrounds/"+req.params.id)
     }else{
-      console.log(campground)
+      console.log(campground)  
       Comment.create(req.body.comment,(err,comment)=>{
         if(err){
-        console.log(err);
+          console.log(err);
         }else{
         console.log(comment)
-        Campground.comment.push(comment);
-        Campground.save();
-        res.redirect("/campgrounds/"+req.params.id)
+          campground.comments.push(comment);
+          campground.save();
+          res.redirect("/campgrounds/"+campground._id)
         }
       })
       
     }
   })
-
 });
 
 
