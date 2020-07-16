@@ -1,33 +1,58 @@
 <% include ../partials/header %>
 <div class="container">
   <div class="row">
-    <div class="col-6 offset-md-3">
-      <h1 class="display-4 text-center"><%= campground.name%></h1>
-      <div class="img-thumbnail ">
-        <img class="img-fluid" src="<%= campground.image%>" alt="">
-      </div>
-      <P>
-        <%= campground.description%>
-      </P>
-    </div>
-    
-    <div class="col-6 offset-md-3">
-      <a href="/campgrounds/<%= campground._id %>/edit"> Edit Post </a>
-    </div>
-      
-    <div class="col-6 offset-md-3">
-    <% campground.comments.forEach((comment)=>{ %>
-      <p>
-        <strong>
-          <%= comment.author %>
-        </strong>
-        - <%= comment.text %>
-        <% }) %>  
+    <div class="col-md-3">
+      <p class="lead">
+        <li class="list-group-item active">Info 1</li>
+        <li class="list-group-item">Info 2</li>
+        <li class="list-group-item">Info 3</li>
       </p>
     </div>
-    <a href="/campgrounds/<%=campground.id%>/comments/new">
-      <button class="btn btn-primary" type="button">Add comment</button>
-    </a>
+    <div class="col-md-9">
+      
+      <div class="img-thumbnail p-0">
+        <img class="img-responsive w-100" src="<%= campground.image %>" alt="">
+        <div class="p-2">
+            <div class="caption-full">
+              <div class="float-right">$9.00/night</div>
+              <h4 class=" text-left"><a href=""><%= campground.name%></a></h4>
+            </div>
+            <P class="text-justify">
+              <%= campground.description.substring(0,150)+"..." %>
+            </P>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <a href="/campgrounds/<%= campground._id %>/edit" class="float-right" > Edit Post </a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="float-right">
+            <a href="/campgrounds/<%=campground.id%>/comments/new">
+              <button class="btn btn-success" type="button">Add comment</button>
+            </a>
+          </div>
+          
+        </div>
+
+
+
+<hr>
+      <% campground.comments.forEach((comment)=>{ %>
+        <div class="col-md-12 m-2">
+          <strong> 
+            <%= comment.author %>
+          </strong>
+          <span class="float-right"> 10 Days ago</span>
+          <p class="">
+            <%= comment.text %>
+          </p>
+        </div>
+      <% }) %>
+    </div>
+    </div>        
   </div>
 </div>
 <% include ../partials/footer %>
