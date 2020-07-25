@@ -3,17 +3,24 @@
 // *           Packages              //
 
 const campground = require("./models/campground.js");
+const { session } = require("passport");
+const passport = require("passport");
 
 // *=================================//
-const express       = require(`express`),
-  app               = express(),
-  bodyParser        = require(`body-parser`),
-  methodOverride    = require("method-override"),
-  mongoose          = require(`mongoose`),
-  Comment           = require("./models/comment.js")
-  Campground        = require("./models/campground.js"),
-  seedDb            = require("./seeds.js");
-  
+const express                     = require(`express`),
+  app                             = express(),
+  expressSession                  = require("express-session")
+  bodyParser                      = require(`body-parser`),
+  methodOverride                  = require("method-override"),
+  mongoose                        = require(`mongoose`),
+  passport                        = require("passport"),
+  localStrategy                   = require("passport-local"),
+  passportLocalMongoose           = require("passport-local-mongoose"),
+  User                            = require("./models/users.js")
+  Comment                         = require("./models/comment.js")
+  Campground                      = require("./models/campground.js"),
+  seedDb                          = require("./seeds.js");
+
 
 //*=================================//
 //*           Middleware            //
@@ -23,6 +30,16 @@ app.set(`view engine`, "ejs");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
+app.use(expressSession({
+  secret:"gduqwhe8wjoqhwe8932h4euqgr89732g8435b34h58i9025",
+  resave:false,
+  saveUninitialized:false
+}))
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new localStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 
 //*=================================//
@@ -63,6 +80,29 @@ app.get("/campgrounds", function(req, res) {
   });
 });
 
+// *=================================//
+// *        Register Route           //
+// *=================================//
+app.get("/register",(req,res)=>{
+  res.render("register")
+})
+
+app.post("/register",(req,res)=>{
+  passport.authenticate()
+})
+
+
+// *=================================//
+// *           Login Route           //
+// *=================================//
+app.get("/login",(req,res)=>{
+  res.render("login")
+})
+
+app.post("/login",(req,res)=>{
+  passport.authenticate()
+})
+
 
 //*=================================//
 //*            New route            //
@@ -84,7 +124,6 @@ app.post(`/campgrounds`, function (req, res) {
             res.send(alert(err));
         } else {
             console.log("Data added Successfully");
-            console.log(campgrounds);
             res.redirect(`/campgrounds`);
         }
     });
@@ -159,14 +198,13 @@ app.delete("/campgrounds/:id", function(req, res) {
 //*         Comment Routes          //
 //*=================================//
 app.get("/campgrounds/:id/comments/new",(req,res)=>{
-Campground.findById(req.params.id, (err,campground)=>{
-  if (err) {
-    console.log(err)
-  } else {
-    res.render("comments/new", {campground:campground})
-  }
-})
-
+  Campground.findById(req.params.id, (err,campground)=>{
+    if (err) {
+      console.log(err)
+    } else {
+      res.render("comments/new", {campground:campground})
+    }
+  })
 });
 
 
@@ -198,7 +236,7 @@ app.post("/campgrounds/:id/comments",(req,res)=>{
 
 
 
-
+f
 
 //*=================================//
 //*       listen for client         //

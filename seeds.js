@@ -61,7 +61,6 @@ var Comment = require("./models/comment.js")
           if(err){
             console.log(err);
           } else {
-            console.log(camp);
             Comment.deleteMany({},(err)=>{
               if(err){
                 console.log(err);
