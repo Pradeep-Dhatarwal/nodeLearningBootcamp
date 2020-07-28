@@ -1,18 +1,17 @@
-const express = require("express"),
-      router  = express.Router({mergeParams:true}),
-      
-      Comment                         = require("../models/comment.js"),
-      Campground                      = require("../models/campground.js");
+const express     = require("express"),
+  router          = express.Router({ mergeParams: true }),
+  Comment         = require("../models/comment.js"),
+  Campground      = require("../models/campground.js");
 
 //*=================================//
 //*         Comment Routes          //
 //*=================================//
-router.get("/new", isLoggedIn , (req,res)=>{
-  Campground.findById(req.params.id, (err,campground)=>{
+router.get("/new", isLoggedIn, (req, res) => {
+  Campground.findById(req.params.id, (err, campground) => {
     if (err) {
       console.log(err)
     } else {
-      res.render("comments/new", {campground:campground})
+      res.render("comments/new", { campground: campground })
     }
   })
 });
@@ -20,20 +19,20 @@ router.get("/new", isLoggedIn , (req,res)=>{
 //*=================================//
 //*           Add Comment           //
 //*=================================//
-router.post("/",(req,res)=>{
-  Campground.findById(req.params.id,(err,campground)=>{
-    if(err){
+router.post("/", (req, res) => {
+  Campground.findById(req.params.id, (err, campground) => {
+    if (err) {
       console.log(err);
-      res.redirect("/campgrounds/"+req.params.id)
-    }else{
-      Comment.create(req.body.comment,(err,comment)=>{
-        if(err){
+      res.redirect("/campgrounds/" + req.params.id)
+    } else {
+      Comment.create(req.body.comment, (err, comment) => {
+        if (err) {
           console.log(err);
-        }else{
+        } else {
           console.log(campground.comments)
           campground.comments.push(comment);
           campground.save();
-          res.redirect("/campgrounds/"+req.params.id)
+          res.redirect("/campgrounds/" + req.params.id)
         }
       })
     }
@@ -42,7 +41,7 @@ router.post("/",(req,res)=>{
 //*=================================//
 //*         helper function         //
 //*=================================//
-function isLoggedIn(req,res,next){
+function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
   } else {

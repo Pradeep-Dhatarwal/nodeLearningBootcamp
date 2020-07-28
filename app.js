@@ -7,7 +7,7 @@ const express                     = require(`express`),
   expressSession                  = require("express-session")
   bodyParser                      = require(`body-parser`),
   methodOverride                  = require("method-override"),
-  mongoose                        = require(`mongoose`),
+  mongoose                        = require("mongoose"),
   passport                        = require("passport"),
   localStrategy                   = require("passport-local"),
   passportLocalMongoose           = require("passport-local-mongoose"),
@@ -57,23 +57,29 @@ app.use((req,res,next)=>{
 //*=================================//
 //*      Configure Database         //
 //*=================================//
-mongoose.connect( process.env.MONGO_URI , {useNewUrlParser: true , useUnifiedTopology: true },(err)=>{
+mongoose.connect( process.env.MONGO_URI , {useNewUrlParser: true , useUnifiedTopology: true, useFindAndModify : false },(err)=>{
   if(!err){
     console.log("Database connected successfully")
   } else (
     console.log(err)
   )
 });
-
-
-
-
 seedDb();
 
 
+
+
+//*=================================//
+//*           Routes                //
+//*=================================//
 app.use(authRoutes);
 app.use("/campgrounds",campgroundRoutes);
 app.use("/campgrounds/:id/comments",commentRoutes);
+
+
+
+
+
 //*=================================//
 //*       listen for client         //
 //*=================================//

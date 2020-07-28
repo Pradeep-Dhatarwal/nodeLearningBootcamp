@@ -1,34 +1,42 @@
 <% include ../partials/header %>
 
-<div class="container jumbotron jumbotron-fluid">
-      <div class="container">
-        <h1 class="display-4">Campgrounds Page</h1>
-        <p class="lead">This is a modified jumbotron that occupies the entire horizontal space of its parent.</p>
-        <a href="/campgrounds/new">
-          <button class="btn btn-large btn-info" >
-            Add New Campground
-          </button>
-        </a>
-      </div>
-    </div>
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <h1 class="display-4">
+      <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-brightness-alt-high-fill" fill="currentColor"
+        xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd"
+          d="M4 11a4 4 0 1 1 8 0 .5.5 0 0 1-.5.5h-7A.5.5 0 0 1 4 11zm4-8a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 3zm8 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 11a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM4.464 7.464a.5.5 0 0 1-.707 0L2.343 6.05a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707z" />
+      </svg>
+      Campgrounds Page
+      <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-brightness-alt-high-fill" fill="currentColor"
+        xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd"
+          d="M4 11a4 4 0 1 1 8 0 .5.5 0 0 1-.5.5h-7A.5.5 0 0 1 4 11zm4-8a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 3zm8 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 11a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM4.464 7.464a.5.5 0 0 1-.707 0L2.343 6.05a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707z" />
+      </svg>
+    </h1>
+    <p class="lead">This is a modified jumbotron that occupies the entire horizontal space of its parent.</p>
+    <a href="/campgrounds/new">
+      <button class="btn btn-large btn-info">
+        Add New Campground
+      </button>
+    </a>
+  </div>
+</div>
 <div class="container">
   <div class="row">
-        <% campground.forEach(function(campgrounds){%>
-            <div class="col-sm-6 col-md-3">
-              <div class="img-thumbnail my-2 text-center">
-                <img class="img-fluid" src="<%= campgrounds.image %>" alt="">
-                <div class="text-center">
-                  <figcaption  >
-                    <%= campgrounds.name %>
-                  </figcaption>
-                    <a href="/campgrounds/<%= campgrounds._id %>" class="btn btn-primary mx-auto">more info</a>
-                    <form action="/campgrounds/<%=campgrounds._id%>?_method=DELETE" method="post">
-                    <input class="btn btn-large btn-info" type="Submit" value="Delete Campground">
-                    </form>
-                </div>
-              </div>
-            </div>
-        <%});%>
-  </div>
+    <% campground.forEach(function(campgrounds){%>
+    <div class="col-sm-6 col-md-3">
+      <div class="img-thumbnail my-2 text-center">
+        <img class="img-fluid" src="<%= campgrounds.image %>" alt="">
+        <div class="text-center">
+          <p>
+            <a href="/campgrounds/<%= campgrounds._id %>" class="blockquote text-dark"><%= campgrounds.name %></a>
+          </p>
+        </div>
+      </div>
+    </div>
+    <%});%>
+  </dioipiopoipv>
 </div>
 <% include ../partials/footer %>

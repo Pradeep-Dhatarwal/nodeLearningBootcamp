@@ -9,40 +9,55 @@
       </p>
     </div>
     <div class="col-md-9">
-      
+
       <div class="img-thumbnail p-0">
         <img class="img-responsive w-100" src="<%= campground.image %>" alt="">
         <div class="p-2">
-            <div class="caption-full">
-              <div class="float-right">$9.00/night</div>
-              <h4 class=" text-left"><a href=""><%= campground.name%></a></h4>
-            </div>
-            <P class="text-justify">
-              <%= campground.description %>
-            </P>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <a href="/campgrounds/<%= campground._id %>/edit" class="float-right" > Edit Post </a>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <div class="float-right">
-            <a href="/campgrounds/<%=campground.id%>/comments/new">
-              <button class="btn btn-success" type="button">Add comment</button>
-            </a>
+          <div class="caption-full">
+            <div class="float-right">$9.00/night</div>
+            <h4 class=" text-left"><a href=""><%= campground.name%></a></h4>
           </div>
+          <P class="text-justify">
+            <%= campground.description %>
+          </P>
+          <P class="text-justify">
+            <em>Submitted by <%= campground.author.username %></em>
+          </P>
+          <% if(currentUser){%>
+            <% if(campground.author.id.equals(currentUser._id)){%>
+              <div style="display: flex; justify-content: space-between;">
+                <span>
+    
+                  <a href="/campgrounds/<%= campground._id %>/edit" class="btn btn-warning btn-sm text-light"> Edit Post </a>
+                </span>
+    
+                <form action="/campgrounds/<%=campground._id%>?_method=DELETE" style="display:flex;" method="post">
+                  <input class="btn btn-danger btn-sm" type="Submit" value="Delete Campground">
+                </form>
+              </div>
+              <%} %>
+              <%} %>
           
+         
+
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+            <p class="text-right mt-4" >
+              <a href="/campgrounds/<%=campground.id%>/comments/new">
+                <button class="btn btn-success btn-sm" type="button">Add comment</button>
+              </a>
+            </p>
+
         </div>
 
 
 
-<hr>
-      <% campground.comments.forEach((comment)=>{ %>
-        <div class="col-md-12 m-2">
-          <strong> 
+        <hr>
+        <% campground.comments.forEach((comment)=>{ %>
+        <div class="col-md-12 mt-2">
+          <strong>
             <%= comment.author %>
           </strong>
           <span class="float-right"> 10 Days ago</span>
@@ -50,9 +65,9 @@
             <%= comment.text %>
           </p>
         </div>
-      <% }) %>
+        <% }) %>
+      </div>
     </div>
-    </div>        
   </div>
 </div>
 <% include ../partials/footer %>
